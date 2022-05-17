@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "time_log")
+@Table(name = "time_log", schema = "tms")
 @EqualsAndHashCode(callSuper = true)
 public class TimeLogEntity extends BaseEntity implements ChangeRequestEntityMarker {
 

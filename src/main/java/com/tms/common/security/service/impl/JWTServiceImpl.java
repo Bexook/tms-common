@@ -1,13 +1,16 @@
 package com.tms.common.security.service.impl;
 
+import com.tms.common.domain.JWTTokenEntity;
+import com.tms.common.domain.UserEntity;
+import com.tms.common.domain.dto.UserDTO;
 import com.tms.common.domain.enumTypes.auth.Authority;
 import com.tms.common.domain.enumTypes.auth.UserRole;
-import com.tms.common.repository.JWTTokenRepository;
-import com.tms.common.security.service.JWTService;
-import com.tms.common.security.AppUserDetailsService;
-
-import com.tms.common.domain.JWTTokenEntity;
 import com.tms.common.domain.model.UserCredentials;
+import com.tms.common.mapper.OrikaBeanMapper;
+import com.tms.common.repository.JWTTokenRepository;
+import com.tms.common.security.AppUserDetailsService;
+import com.tms.common.security.service.JWTService;
+import com.tms.common.security.service.UserService;
 import com.tms.common.userAuthDataConfiguration.AppUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +19,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,17 +41,22 @@ public class JWTServiceImpl implements JWTService {
     @Value("${jwt.expiration}")
     private int expirationPeriod;
 
+
+    @Autowired
+    private OrikaBeanMapper mapper;
+    @Autowired
+    private UserService userService;
     @Autowired
     private JWTTokenRepository jwtTokenRepository;
     @Autowired
     private AppUserDetailsService appUserDetailsService;
-    @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
 
 
     @Override
     public String generateToken(AppUserDetails appUserDetails) {
+        final UserDTO user = userService.getUserById(appUserDetails.getUserId());
         Date expiration = Date.from(Instant.from(LocalDate.now().plusDays(expirationPeriod).atStartOfDay(ZoneId.systemDefault())));
         Claims claims = Jwts.claims().setSubject(appUserDetails.getUsername());
         claims.put("userRole", appUserDetails.getAuthorities());
@@ -58,7 +66,7 @@ public class JWTServiceImpl implements JWTService {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        jwtTokenRepository.save(new JWTTokenEntity(token));
+        jwtTokenRepository.save(new JWTTokenEntity(token, mapper.map(user, UserEntity.class)));
         return token;
     }
 
@@ -99,6 +107,15 @@ public class JWTServiceImpl implements JWTService {
         return (String) getClaims(token).getSubject();
     }
 
+
+    @Override
+    public String getTokenFromRequest(ServerHttpRequest serverHttpRequest) throws AuthenticationException {
+        String token = serverHttpRequest.getHeaders().get(AUTHORIZATION).stream().filter(header -> header.startsWith("Bearer ")).findFirst().orElseThrow(() -> new AuthenticationException("Bearer token not found"));
+        if (Objects.nonNull(token.substring(7)) && Strings.isNotBlank(token.substring(7))) {
+            return token.substring(7);
+        }
+        throw new AuthenticationException("Bearer token not found");
+    }
 
     @Override
     public Authority getAuthority(String token) {

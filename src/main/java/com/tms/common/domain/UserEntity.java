@@ -14,7 +14,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "app_user")
+@Table(name = "app_user", schema = "tms")
 @EqualsAndHashCode(callSuper = true)
 @SQLDelete(sql = "UPDATE app_user SET is_active = 0 WHERE public.app_user.id= ? ", check = ResultCheckStyle.COUNT)
 @FilterDef(name = "activeFilter", parameters = @ParamDef(name = "isActive", type = "boolean"))
@@ -50,8 +50,8 @@ public class UserEntity extends BaseEntity implements ChangeRequestEntityMarker 
     private boolean isEmailVerified;
 
     @Fetch(value = FetchMode.JOIN)
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "app_user_time_log",
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "app_user_time_log", schema = "tms",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id")
             },

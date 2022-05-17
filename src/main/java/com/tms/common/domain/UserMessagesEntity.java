@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "user_message", schema = "tms")
 @SQLDelete(sql = "UPDATE user_messages SET delete = true", check = ResultCheckStyle.COUNT)
 @SQLDeleteAll(sql = "UPDATE user_messages SET delete = true", check = ResultCheckStyle.COUNT)
 public class UserMessagesEntity {

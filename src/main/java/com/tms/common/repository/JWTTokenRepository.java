@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JWTTokenRepository extends JpaRepository<JWTTokenEntity, Long> {
 
-
     JWTTokenEntity findByJwtToken(String token);
 
     void deleteByJwtToken(String token);

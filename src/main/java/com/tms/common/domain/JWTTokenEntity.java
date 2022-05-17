@@ -8,12 +8,12 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "active_tokens")
+@Table(name = "active_tokens", schema = "tms")
 public class JWTTokenEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "jwt_token")
     private String jwtToken;
@@ -21,7 +21,8 @@ public class JWTTokenEntity {
     @ManyToOne
     private UserEntity user;
 
-    public JWTTokenEntity(String jwtToken) {
+    public JWTTokenEntity(String jwtToken, final UserEntity user) {
         this.jwtToken = jwtToken;
+        this.user = user;
     }
 }

@@ -2,6 +2,6 @@ package com.tms.common.domain.enumTypes.auth;
 
 public enum AccessType {
 
-    ALL, USER, PUBLIC
+   USER, PUBLIC, GOD_MODE, DIRECTOR, MANAGER
 
 }

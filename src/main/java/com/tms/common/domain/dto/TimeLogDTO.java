@@ -11,11 +11,14 @@ import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TimeLogDTO extends BaseEntity {
+public class TimeLogDTO extends BaseDTO {
 
+    private Long id;
     private LocalDate date;
     private Double timeSpend;
     private CalendarDayType calendarDayType;
     private UserEntity userEntity;
+    private TeamDTO teamDTO;
+    private String createdBy;
 
 }

@@ -27,10 +27,6 @@ public interface JWTService {
 
     String getPrincipal(String token);
 
-    Authority getAuthority(String token);
-
-    UserRole getUserRole(String token);
-
     Date getExpiration(String token);
 
 }

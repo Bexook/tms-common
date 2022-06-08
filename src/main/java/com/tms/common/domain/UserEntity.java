@@ -1,5 +1,7 @@
 package com.tms.common.domain;
 
+import com.tms.common.domain.enumTypes.auth.AccessType;
+import com.tms.common.domain.enumTypes.auth.Authority;
 import com.tms.common.domain.enumTypes.auth.UserRole;
 import com.tms.common.changeRequestDomain.entityMarker.ChangeRequestEntityMarker;
 import lombok.Data;
@@ -10,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -42,6 +45,17 @@ public class UserEntity extends BaseEntity implements ChangeRequestEntityMarker 
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
+
+    @Column(name = "access_type")
+    @Enumerated(value = EnumType.STRING)
+    private AccessType accessType;
+
+    @Column(name = "authorities")
+    @ElementCollection(targetClass = Authority.class)
+    @Enumerated(value = EnumType.STRING)
+    private Set<Authority> authority;
+
+
 
     @Column(name = "is_credentials_expired")
     private boolean isCredentialsExpired;

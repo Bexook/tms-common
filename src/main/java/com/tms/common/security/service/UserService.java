@@ -12,7 +12,7 @@ public interface UserService {
 
     UserDTO getUserById(@NonNull Long id);
 
-    UserEntity registerUser(@NonNull UserEntity userEntity);
+    void registerUser(@NonNull UserDTO userEntity);
 
     void deleteById(Long id);
 

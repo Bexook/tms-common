@@ -65,6 +65,6 @@ public class TeamMemberEntity implements ChangeRequestEntityMarker {
             columnDefinition = "BIGINT NOT NULL UNIQUE",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "user_id_constraint"))
-    private UserEntity userEntity;
+    private UserEntity user;
 
 }

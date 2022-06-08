@@ -118,16 +118,6 @@ public class JWTServiceImpl implements JWTService {
     }
 
     @Override
-    public Authority getAuthority(String token) {
-        return getClaims(token).get("authority", Authority.class);
-    }
-
-    @Override
-    public UserRole getUserRole(String token) {
-        return UserRole.valueOf(getClaims(token).get("userRole", String.class));
-    }
-
-    @Override
     public Date getExpiration(String token) {
         return getClaims(token).getExpiration();
     }

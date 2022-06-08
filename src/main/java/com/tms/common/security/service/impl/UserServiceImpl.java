@@ -40,9 +40,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @ChangeRequest(operationType = OperationType.CREATE)
-    public UserEntity registerUser(@NonNull UserEntity userEntity) {
-        userRepository.save(userEntity);
-        return userRepository.findByEmail(userEntity.getEmail());
+    public void registerUser(@NonNull UserDTO user) {
+        userRepository.save(mapper.map(user, UserEntity.class));
     }
 
     @Override
